@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition - Luxand Cloud</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Face Recognition System</h1>
+        
+        <!-- Enroll Section -->
+        <div class="section">
+            <h2>👤 Enroll Person</h2>
+            <div class="form-group">
+                <label for="personName">Person Name:</label>
+                <input type="text" id="personName" placeholder="Enter person's name" required>
+            </div>
+            <div class="form-group">
+                <label for="enrollPhoto">Select Photo:</label>
+                <input type="file" id="enrollPhoto" accept="image/*" required>
+            </div>
+            <button onclick="enrollPerson()" class="btn btn-primary">Enroll Person</button>
+            <div id="enrollResult" class="result"></div>
+        </div>
+
+        <!-- Recognize Section -->
+        <div class="section">
+            <h2>🔍 Recognize Person</h2>
+            <div class="form-group">
+                <label for="recognizePhoto">Select Photo to Recognize:</label>
+                <input type="file" id="recognizePhoto" accept="image/*" required>
+            </div>
+            <button onclick="recognizePerson()" class="btn btn-success">Recognize Person</button>
+            <div id="recognizeResult" class="result"></div>
+        </div>
+
+        <!-- zkLogin Authentication Section -->
+        <div class="section">
+            <h2>🔐 zkLogin Authentication</h2>
+            <div class="zklogin-info">
+                <p>Connect your face recognition to Sui blockchain using zkLogin - authenticate with your social accounts while maintaining privacy.</p>
+            </div>
+            
+            <div class="auth-status" id="authStatus">
+                <div class="status-disconnected">
+                    <span class="status-indicator">🔴</span>
+                    <span>Not connected to Sui</span>
+                </div>
+            </div>
+
+            <div class="oauth-providers">
+                <h3>🌐 Login with OAuth Provider</h3>
+                <div class="provider-buttons">
+                    <button onclick="loginWithGoogle()" class="btn btn-oauth btn-google">
+                        <span class="oauth-icon">📧</span>
+                        Login with Google
+                    </button>
+                    <button onclick="loginWithFacebook()" class="btn btn-oauth btn-facebook">
+                        <span class="oauth-icon">📘</span>
+                        Login with Facebook
+                    </button>
+                    <button onclick="loginWithTwitch()" class="btn btn-oauth btn-twitch">
+                        <span class="oauth-icon">🎮</span>
+                        Login with Twitch
+                    </button>
+                </div>
+            </div>
+
+            <div class="wallet-info" id="walletInfo" style="display: none;">
+                <h3>💳 Wallet Information</h3>
+                <div class="wallet-details">
+                    <div class="detail-item">
+                        <strong>Sui Address:</strong>
+                        <span id="suiAddress" class="address-text">Not connected</span>
+                        <button onclick="copyAddress()" class="btn-copy">📋</button>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Provider:</strong>
+                        <span id="authProvider">None</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Status:</strong>
+                        <span id="connectionStatus">Disconnected</span>
+                    </div>
+                </div>
+                <div class="wallet-actions">
+                    <button onclick="disconnectWallet()" class="btn btn-warning">Disconnect</button>
+                    <button onclick="refreshWallet()" class="btn btn-secondary">Refresh</button>
+                </div>
+            </div>
+
+            <div class="zklogin-features" id="zkloginFeatures" style="display: none;">
+                <h3>🎯 zkLogin Features</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🔒 Privacy-First</h4>
+                        <p>Your OAuth identity is never linked to your Sui address publicly</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔑 Self-Custody</h4>
+                        <p>You maintain full control - OAuth providers cannot transact on your behalf</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🛡️ Two-Factor Security</h4>
+                        <p>Requires both OAuth login and a salt for maximum security</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📱 Easy Onboarding</h4>
+                        <p>No need to manage crypto keys or remember mnemonics</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="zkloginResult" class="result"></div>
+        </div>
+
+        <!-- Enrolled Persons List -->
+        <div class="section">
+            <h2>📋 Enrolled Persons</h2>
+            <div class="list-controls">
+                <button onclick="refreshEnrolledList()" class="btn btn-secondary">Refresh Local List</button>
+                <button onclick="loadDatabasePersons()" class="btn btn-info">Load from Database</button>
+            </div>
+            <div class="persons-container">
+                <div class="persons-section">
+                    <h3>💾 Local Storage</h3>
+                    <div id="enrolledPersons" class="enrolled-list">
+                        <p>No persons enrolled yet.</p>
+                    </div>
+                </div>
+                <div class="persons-section">
+                    <h3>☁️ Database</h3>
+                    <div id="databasePersons" class="enrolled-list">
+                        <p>Click "Load from Database" to see all persons.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="section instructions">
+            <h3>📝 Instructions:</h3>
+            <ol>
+                <li><strong>Enroll:</strong> Enter a person's name and upload their photo to add them to the system</li>
+                <li><strong>Recognize:</strong> Upload a photo to identify if the person is already enrolled</li>
+                <li><strong>zkLogin:</strong> Connect to Sui blockchain using OAuth providers (Google, Facebook, Twitch)</li>
+                <li><strong>Load from Database:</strong> Click to see all persons stored in Luxand Cloud</li>
+                <li><strong>Delete:</strong> Remove persons from the Luxand Cloud database permanently</li>
+                <li>Use clear, well-lit photos for best results</li>
+                <li>Make sure faces are clearly visible and not blurred</li>
+                <li>zkLogin provides privacy-first blockchain authentication without exposing your identity</li>
+                <li>Local storage shows your session data, Database shows all cloud data</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
