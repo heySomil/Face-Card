@@ -1,58 +1,39 @@
-import Modal from "@/app/components/shared/modal";
-import {
-  useState,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-} from "react";
-import Image from "next/image";
+"use client";
 
-const DemoModal = ({
-  showDemoModal,
-  setShowDemoModal,
-}: {
-  showDemoModal: boolean;
-  setShowDemoModal: Dispatch<SetStateAction<boolean>>;
-}) => {
+import { motion } from "framer-motion";
+import CountingNumbers from "@/app/components/shared/counting-numbers";
+
+export default function WebVitals() {
   return (
-    <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
-      <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-        <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
-          <a href="/">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" fill="white" opacity="0.2"/>
-                <circle cx="9.5" cy="9.5" r="1" fill="white"/>
-                <circle cx="14.5" cy="9.5" r="1" fill="white"/>
-                <path d="M8.5 14.5 Q12 16.5 15.5 14.5" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round"/>
-              </svg>
-            </div>
-          </a>
-          <h3 className="font-display text-2xl font-bold">PayWiser</h3>
-          <p className="text-sm text-gray-500">
-            The future of biometric payments powered by blockchain technology.
-          </p>
-        </div>
-      </div>
-    </Modal>
-  );
-};
-
-export function useDemoModal() {
-  const [showDemoModal, setShowDemoModal] = useState(false);
-
-  const DemoModalCallback = useCallback(() => {
-    return (
-      <DemoModal
-        showDemoModal={showDemoModal}
-        setShowDemoModal={setShowDemoModal}
+    <div className="relative h-full w-full">
+      <motion.svg
+        className="absolute inset-0 m-auto"
+        viewBox="0 0 100 100"
+        width={140}
+        height={140}
+      >
+        <motion.circle
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 2, ease: "easeOut" }}
+          strokeWidth={7}
+          strokeDasharray="0 1"
+          strokeLinecap="round"
+          transform="rotate(-90 50 50)"
+          cx="50"
+          cy="50"
+          r="45"
+          fill="#DCFCE7"
+          stroke="#22C55E"
+        />
+      </motion.svg>
+      <CountingNumbers
+        value={100}
+        duration={2500}
+        className="absolute inset-0 mx-auto flex items-center justify-center font-display text-5xl text-green-500"
       />
-    );
-  }, [showDemoModal, setShowDemoModal]);
-
-  return useMemo(
-    () => ({ setShowDemoModal, DemoModal: DemoModalCallback }),
-    [setShowDemoModal, DemoModalCallback],
+    </div>
   );
 }
